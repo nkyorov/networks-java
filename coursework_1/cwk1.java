@@ -24,20 +24,31 @@ public class cwk1 {
     segmented = addr.split(" ");
     return segmented;
   }
+  public String checkVersion(){
+      byte[] address = inet.getAddress();
+      if (address.length == 4) {
+          return "IPv4";
+      }
+      else {
+          return "IPv6";
+      }
+  }
+
   public void resolve(String host) {
     try {
-      // Try to create an instance of InetAddress using the factory method (public static).
-      // If fails, may throw an instance of UnknownHostException.
-      inet = InetAddress.getByName( host );
+        inet = InetAddress.getByName( host );
+        byte[] address = inet.getAddress();
+
 
       System.out.println("========================");
-      // Use two getter methods to print the results. Can also just print the object itself (which combines both).
       System.out.println( "Host name : " + inet.getHostName   () );
       System.out.println( "IP Address: " + inet.getHostAddress() );
+      System.out.println( "IP version: " + checkVersion());
       System.out.println( "Reachable: " + inet.isReachable(60) );
       System.out.println("========================\n");
     }
-    catch( UnknownHostException e ){ 		// If an exception was thrown, echo to stdout.
+
+    catch( UnknownHostException e ){
       e.printStackTrace();
     }
     catch( IOException e){
