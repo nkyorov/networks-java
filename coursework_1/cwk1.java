@@ -44,6 +44,7 @@ public class cwk1 {
      * @return segmented: Array consisting of separated addresses
      */
     public String[] continousScan() {
+        System.out.println("Enter hostname/IP address: ");
         String addr = readInput();
         segmented = addr.split(" ");
         return segmented;
@@ -181,6 +182,7 @@ public class cwk1 {
     public static void main(String[] args) {
         cwk1 kbd = new cwk1();
         cwk1 lookup = new cwk1();
+
         // Reads one or more hostnames provided as command line argument.
         if (args.length != 0) {
             for (int i = 0; i < args.length; i++) {
@@ -200,6 +202,7 @@ public class cwk1 {
                 lookup.commonHierarchy();
             }
         }
+
         // Compute common hierarchy, if more than one IP address is provided.
         if (args.length > 1) {
             lookup.commonHierarchy();
