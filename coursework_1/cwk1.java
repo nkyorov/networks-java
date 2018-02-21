@@ -4,20 +4,18 @@ import java.io.*;
 
 public class cwk1 {
     //Initial declaratioms
-    private Scanner input = null;
     private String cmd = null;
     private String[] segmented = null;
-    private Scanner kbdReader = null;
+    private Scanner input = null;
     private InetAddress inet = null;
     private byte[] address = null;
     private List<String> list = new ArrayList<String>();
-
 
     /**
      * Default constructor for Scanner
      */
     public cwk1() {
-        kbdReader = new Scanner(System.in);
+        input = new Scanner(System.in);
     }
 
     /**
@@ -27,11 +25,15 @@ public class cwk1 {
      */
     public String readInput() {
         while (true) {
-            cmd = kbdReader.nextLine();
+            cmd = input.nextLine();
             return cmd;
         }
     }
 
+    /**
+     * Getter for the list storing IP addresses
+     * @return list
+     */
     public List getList() {
         return list;
     }
@@ -73,12 +75,18 @@ public class cwk1 {
             inet = InetAddress.getByName(host);
             byte[] address = inet.getAddress();
 
-            String ipa = inet.getHostAddress();
-            String[] res = ipa.split("\\.");
-            for (String w : res) {
-                list.add(w);
+
+            /**
+             * Split the IP address using full-stop as delimeter and add each
+             * part(byte) into the list.
+             */
+            String ipAddress = inet.getHostAddress();
+            String[] splitIP = ipAddress.split("\\.");
+            for (String ipByte : splitIP) {
+                list.add(ipByte);
             }
 
+            // Output required information
             System.out.println("========================");
             System.out.println("Host name : " + inet.getHostName());
             System.out.println("IP Address: " + inet.getHostAddress());
@@ -88,30 +96,43 @@ public class cwk1 {
 
         }
 
-        //Handles any exceptions related to InetAddress
+        // Handles any exceptions related to InetAddress
         catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
-        //Handles isReachable()
+        // Handles isReachable()
         catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void hier() {
+    public void commonHierarchy() {
+        // Stores information about equal parts of two IP addresses
         boolean starAtOne = false;
         boolean starAtTwo = false;
         boolean starAtThree = false;
         boolean starAtFour = false;
-        int i = 1;
-        for (; ; ) {
+        String info = "Common hierarchy is: ";
+
+        for (;;) {
+            /**
+             * Initialise indexes for the different bytes
+             * For example, in 129.11.2.17, i1 refers to [129], i2 to [11],
+             * i3 to [2] and i4 to [17].
+             */
             int i1 = 4;
             int i2 = 5;
             int i3 = 6;
             int i4 = 7;
-            System.out.println("Computing common hierarchy.");
-            while ((i1 < list.size()) && (i2 < list.size()) && (i3 < list.size()) && (i4 < list.size())) {
+
+            /**
+             * Loop through the list of IP addresses, until we reach the end of
+             * the list, comparing each IP address with the first one, setting
+             * the booleans to reflect which parts share common hierarchy.
+             */
+            while ((i1 < list.size()) && (i2 < list.size())
+            && (i3 < list.size()) && (i4 < list.size())) {
                 if (list.get(0).equals(list.get(i1))) {
                     starAtOne = true;
                 } else {
@@ -137,43 +158,51 @@ public class cwk1 {
                 i3 += 4;
                 i4 += 4;
             }
+            // Stop, if we have reached the last IP address.
             break;
         }
 
+        // Compare the booleans and output common hierarchy.
         if ((starAtOne && starAtTwo && starAtThree && starAtFour)) {
-            System.out.println("*.*.*.*");
+            System.out.println(info + "*.*.*.*");
         } else if ((starAtOne && starAtTwo && starAtThree) && (!starAtFour)) {
-            System.out.println(list.get(0) + "." + list.get(1) + "." + list.get(2) + ".*");
+            System.out.println(info + list.get(0) + "." + list.get(1) + "." +
+            list.get(2) + ".*");
         } else if ((starAtOne && starAtTwo) && !(starAtFour && starAtThree)) {
-            System.out.println(list.get(0) + "." + list.get(1) + ".*" + ".*");
+            System.out.println(info + list.get(0) + "." + list.get(1) + ".*" +
+            ".*");
         } else if ((starAtOne) && !(starAtFour && starAtThree && starAtTwo)) {
-            System.out.println(list.get(0) + ".*" + ".*" + ".*");
+            System.out.println(info + list.get(0) + ".*" + ".*" + ".*");
         } else {
             System.out.println("No common hierarchy.");
         }
     }
 
-
     public static void main(String[] args) {
         cwk1 kbd = new cwk1();
         cwk1 lookup = new cwk1();
-        // Reads one or more hostnames provided as command line argument
+        // Reads one or more hostnames provided as command line argument.
         if (args.length != 0) {
-            for (int i = 0; i<args.length ;i++) {
+            for (int i = 0; i < args.length; i++) {
                 lookup.resolve(args[i]);
             }
         }
+
         // Read continously from the keyboard
         else {
             String[] seg = kbd.continousScan();
+
             for (String segment: seg) {
                 lookup.resolve(segment);
             }
-        }
-        if (args.length > 1) {
-            lookup.hier();
-        }
 
-        lookup.hier();
+            if (seg.length > 1) {
+                lookup.commonHierarchy();
+            }
+        }
+        // Compute common hierarchy, if more than one IP address is provided.
+        if (args.length > 1) {
+            lookup.commonHierarchy();
+        }
     }
 }
