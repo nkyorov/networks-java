@@ -3,13 +3,14 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class ExecutorServer {
+public class Server {
     private ServerSocket serverSocket = null;
     private ExecutorService service = null;
     private Socket client = null;
 
-    public ExecutorServer(){
+    public Server(){
     }
+
     public void run()throws IOException{
         // Try to open up the listening port
         try {
@@ -19,7 +20,7 @@ public class ExecutorServer {
             System.exit(-1);
         }
         // Initialise the executor.
-        service = Executors.newCachedThreadPool();
+        service = Executors.newFixedThreadPool(10);
         
         while (true) {
             client = serverSocket.accept();
@@ -47,7 +48,7 @@ public class ExecutorServer {
     // }
 
     public static void main(String[] args) throws IOException {
-        ExecutorServer server = new ExecutorServer();
+        Server server = new Server();
         server.run();
     }
 }

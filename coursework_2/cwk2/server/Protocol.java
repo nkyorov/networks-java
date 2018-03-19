@@ -25,7 +25,7 @@ public class Protocol {
 
     public String processInput(String[] theInput) throws IOException {
         String theOutput = null;
-        ExecutorServer exSever = new ExecutorServer();
+        Server Server = new Server();
         if (state == WAITING) {
             theOutput = "Hello stranger.";
             state = EXECUTECMD;

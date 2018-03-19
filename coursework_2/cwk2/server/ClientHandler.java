@@ -1,6 +1,8 @@
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 
 public class ClientHandler extends Thread {
     private Socket socket = null;
@@ -10,6 +12,18 @@ public class ClientHandler extends Thread {
 		this.socket = socket;
     }
 
+    public void logging(InetAddress inet, String input) throws IOException {
+        File log = new File("log.txt");
+        try{
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd : HH:mm:ss");
+            Date date = new Date();
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(log,true));
+            bufferedWriter.write("" + dateFormat.format(date) + " : " + inet.getHostName() + "  " + inet.getHostAddress() + " : " + input + "\n");
+            bufferedWriter.close();
+        } catch(IOException e) {
+            System.out.println("Log operation failed!");
+        }
+    }
 
     public void run() {
         try {
@@ -21,6 +35,7 @@ public class ClientHandler extends Thread {
             InetAddress inet = socket.getInetAddress();
             Date date = new Date();
 
+            logging(inet,"Established connection");
             System.out.println("\nDate " + date.toString() );
             System.out.println("Connection made from " + inet.getHostName() );
 
@@ -34,6 +49,7 @@ public class ClientHandler extends Thread {
                 String[] segmented = inputLine.split(" ");
                 outputLine = protocol.processInput(segmented);
                 out.println(outputLine);
+                logging(inet,inputLine);
             }
 
             out.close();
