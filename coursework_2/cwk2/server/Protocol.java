@@ -23,26 +23,27 @@ public class Protocol {
         return res;
     }
 
-    public String processInput(String theInput) throws IOException {
+    public String processInput(String[] theInput) throws IOException {
         String theOutput = null;
         ExecutorServer exSever = new ExecutorServer();
         if (state == WAITING) {
             theOutput = "Hello stranger.";
             state = EXECUTECMD;
         } else if (state == EXECUTECMD) {
-            if (theInput.equalsIgnoreCase("list")) {
+            if (theInput[0].equals("list")) {
                 files = list();
                 theOutput = "Files available: " + Arrays.toString(files.toArray()).replace("[","").replace("]","");
                 state = EXECUTECMD;
             }
-            else if (theInput.equalsIgnoreCase("get")) {
-                exSever.sendFile("lipsum1.txt");
+            else if (theInput[0].equals("get")) {
                 theOutput = "File sent";
                 state = EXECUTECMD;
             }
-            else{
-                theOutput = "Command is unknown/not supported!";
+            else if (theInput[0].equals("bye")) {
+                theOutput = "bye";
+                state = WAITING;
             }
+            
         
         }
         return theOutput;

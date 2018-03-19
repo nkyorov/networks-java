@@ -30,7 +30,9 @@ public class ClientHandler extends Thread {
 	        out.println(outputLine);
 
 	        while ((inputLine = in.readLine()) != null) {
-                outputLine = protocol.processInput(inputLine);
+                // Split into segments separated by spaces.
+                String[] segmented = inputLine.split(" ");
+                outputLine = protocol.processInput(segmented);
                 out.println(outputLine);
             }
 

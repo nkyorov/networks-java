@@ -40,19 +40,13 @@ public class Client {
         try {
             while ((fromServer = socketInput.readLine()) != null) {
                 System.out.println("Server: " + fromServer);
-                if (fromServer.equals("Bye.")){
+                if (fromServer.equals("bye")){
                     break;
                 }
 
                 // client types in response
                 fromUser = stdIn.readLine();
 
-                if (fromUser.equals("Bye.")){
-                      break;
-                }
-                if (fromUser.equals("get")) {
-                    saveFile("lipsum1.txt");
-                }
     	        if (fromUser != null) {
                       // echo client string
                     System.out.println("Client: " + fromUser);
@@ -69,24 +63,44 @@ public class Client {
             e.printStackTrace();
         }
     }
-
-    public void saveFile(String filename) throws IOException {
-        DataInputStream dataIn = new DataInputStream(Socket.getInputStream());
-        FileOutputStream fileOut = new FileOutputStream("clientFiles/" + filename);
-        byte[] buffer = new byte[8 * 1024];
-
-        File f1 = new File("../server/serverFiles/" + filename);
-        long fileSize = f1.length();
-
-        int total = 0, bytesRead;
-        while (total < fileSize && (bytesRead = dataIn.read(buffer)) != -1) {
-            total += bytesRead;
-            fileOut.write(buffer);
+    
+    public void sendFile(String file){
+        try{
+            int count, total = 0;
+            byte[] bytes = new byte[8*1024];
+    
+            DataOutputStream dataOut = new DataOutputStream(Socket.getOutputStream());
+            FileInputStream fileIn = new FileInputStream("../server/serverFiles/" + file);
+    
+            while((count=fileIn.read(bytes))>0 ){
+                total +=  count;
+                dataOut.write(bytes, 0, count);
+            }
+            fileIn.close();
+            dataOut.close();
         }
-
-        dataIn.close();
-        fileOut.close();
+        catch( IOException e ) {
+            e.printStackTrace();
+        }
     }
+
+    //     public void saveFile(String filename) throws IOException {
+    //     DataInputStream dataIn = new DataInputStream(client.getInputStream());
+    //     FileOutputStream fileOut = new FileOutputStream("clientFiles/" + filename);
+    //     byte[] buffer = new byte[8*1024];
+
+    //     File f1 = new File("serverFiles/" + filename);
+    //     long fileSize = f1.length();
+
+    //     int total = 0 , bytesRead ;
+    //     while (total < fileSize && (bytesRead = dataIn.read(buffer)) != -1 ){
+    //         total += bytesRead;
+    //         fileOut.write(buffer);
+    //     }
+
+    //     dataIn.close();
+    //     fileOut.close();
+    // }
 
     public static void main(String[] args) {
       Client client = new Client();
