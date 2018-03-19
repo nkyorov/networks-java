@@ -1,4 +1,3 @@
-package server;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -24,8 +23,9 @@ public class Protocol {
         return res;
     }
 
-    public String processInput(String theInput) {
+    public String processInput(String theInput) throws IOException {
         String theOutput = null;
+        ExecutorServer exSever = new ExecutorServer();
         if (state == WAITING) {
             theOutput = "Hello stranger.";
             state = EXECUTECMD;
@@ -33,8 +33,13 @@ public class Protocol {
             if (theInput.equalsIgnoreCase("list")) {
                 files = list();
                 theOutput = "Files available: " + Arrays.toString(files.toArray()).replace("[","").replace("]","");
-                state = WAITING;
+                state = EXECUTECMD;
             }
+            if (theInput.equalsIgnoreCase("get")) {
+                theOutput = "File sent";
+                state = EXECUTECMD;
+            }
+        
         }
         return theOutput;
     }

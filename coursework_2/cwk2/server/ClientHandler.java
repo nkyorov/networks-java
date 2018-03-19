@@ -1,8 +1,6 @@
-package client;
 import java.net.*;
 import java.io.*;
 import java.util.*;
-import Protocol.*;
 
 public class ClientHandler extends Thread {
     private Socket socket = null;
@@ -43,22 +41,4 @@ public class ClientHandler extends Thread {
             e.printStackTrace();
         }
     }
-    // public void sendFile(String file){
-    //     try{
-    //         int count, total = 0;
-    //         byte[] bytes = new byte[8*1024];
-    //
-    //         DataOutputStream dataOut = new DataOutputStream(clientSocket.getOutputStream());
-    //         FileInputStream fileIn = new FileInputStream("/clientFiles/" + file);
-    //         byte[] buffer = new byte[4096];
-    //
-    //         while((count=fileIn.read(bytes))>0 ){
-    //             total +=  count;
-    //             dataOut.write( bytes , 0, count );
-    //         }
-    //     }
-    //     catch( IOException e ) {
-    //         System.err.println( "Invalid filename");
-    //     }
-    // }
 }

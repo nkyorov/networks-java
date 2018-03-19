@@ -1,4 +1,3 @@
-package client;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -9,10 +8,8 @@ public class Client {
     private PrintWriter socketOutput = null;
     private BufferedReader socketInput = null;
 
-    public void playKnockKnock() {
-
+    public void run() {
         try {
-
             // try and create the socket
             Socket = new Socket( "localhost", 8888 );
 
@@ -41,42 +38,61 @@ public class Client {
 
         // read from server
         try {
-          while ((fromServer = socketInput.readLine()) != null) {
+            while ((fromServer = socketInput.readLine()) != null) {
+                System.out.println("Server: " + fromServer);
+                if (fromServer.equals("Bye.")){
+                    break;
+                }
 
-              // echo server string
-              System.out.println("Server: " + fromServer);
-              if (fromServer.equals("Bye.")){
-                  break;
-              }
+                // client types in response
+                fromUser = stdIn.readLine();
 
-              // client types in response
-              fromUser = stdIn.readLine();
-
-              if (fromUser.equals("Bye.")){
-                  break;
-              }
-
-    	      if (fromUser != null) {
-                  // echo client string
-                  System.out.println("Client: " + fromUser);
-                  // write to server
-                  socketOutput.println(fromUser);
-              }
-          }
-          socketOutput.close();
-          socketInput.close();
-          stdIn.close();
-          Socket.close();
+                if (fromUser.equals("Bye.")){
+                      break;
+                }
+                if (fromUser.equals("get")) {
+                    sendFile("lipsum1.txt");
+                }
+    	        if (fromUser != null) {
+                      // echo client string
+                    System.out.println("Client: " + fromUser);
+                    // write to server
+                    socketOutput.println(fromUser);
+                }
+            }
+            socketOutput.close();
+            socketInput.close();
+            stdIn.close();
+            Socket.close();
         }
         catch (IOException e) {
-            System.err.println("I/O exception during execution\n");
-            System.exit(1);
+            e.printStackTrace();
+        }
+    }
+    
+    public void sendFile(String file){
+        try{
+            int count, total = 0;
+            byte[] bytes = new byte[8*1024];
+    
+            DataOutputStream dataOut = new DataOutputStream(Socket.getOutputStream());
+            FileInputStream fileIn = new FileInputStream("../server/serverFiles/" + file);
+    
+            while((count=fileIn.read(bytes))>0 ){
+                total +=  count;
+                dataOut.write(bytes, 0, count);
+            }
+            fileIn.close();
+            dataOut.close();
+        }
+        catch( IOException e ) {
+            e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
       Client client = new Client();
-      client.playKnockKnock();
+      client.run();
     }
 
 }
