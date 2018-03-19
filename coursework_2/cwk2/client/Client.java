@@ -51,7 +51,7 @@ public class Client {
                       break;
                 }
                 if (fromUser.equals("get")) {
-                    sendFile("lipsum1.txt");
+                    saveFile("lipsum1.txt");
                 }
     	        if (fromUser != null) {
                       // echo client string
@@ -69,25 +69,23 @@ public class Client {
             e.printStackTrace();
         }
     }
-    
-    public void sendFile(String file){
-        try{
-            int count, total = 0;
-            byte[] bytes = new byte[8*1024];
-    
-            DataOutputStream dataOut = new DataOutputStream(Socket.getOutputStream());
-            FileInputStream fileIn = new FileInputStream("../server/serverFiles/" + file);
-    
-            while((count=fileIn.read(bytes))>0 ){
-                total +=  count;
-                dataOut.write(bytes, 0, count);
-            }
-            fileIn.close();
-            dataOut.close();
+
+    public void saveFile(String filename) throws IOException {
+        DataInputStream dataIn = new DataInputStream(Socket.getInputStream());
+        FileOutputStream fileOut = new FileOutputStream("clientFiles/" + filename);
+        byte[] buffer = new byte[8 * 1024];
+
+        File f1 = new File("../server/serverFiles/" + filename);
+        long fileSize = f1.length();
+
+        int total = 0, bytesRead;
+        while (total < fileSize && (bytesRead = dataIn.read(buffer)) != -1) {
+            total += bytesRead;
+            fileOut.write(buffer);
         }
-        catch( IOException e ) {
-            e.printStackTrace();
-        }
+
+        dataIn.close();
+        fileOut.close();
     }
 
     public static void main(String[] args) {

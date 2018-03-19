@@ -35,9 +35,13 @@ public class Protocol {
                 theOutput = "Files available: " + Arrays.toString(files.toArray()).replace("[","").replace("]","");
                 state = EXECUTECMD;
             }
-            if (theInput.equalsIgnoreCase("get")) {
+            else if (theInput.equalsIgnoreCase("get")) {
+                exSever.sendFile("lipsum1.txt");
                 theOutput = "File sent";
                 state = EXECUTECMD;
+            }
+            else{
+                theOutput = "Command is unknown/not supported!";
             }
         
         }
