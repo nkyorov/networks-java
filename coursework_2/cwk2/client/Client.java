@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.*;
 
 public class Client {
-
+    //Fields initialisation 
     private Socket Socket = null;
     private PrintWriter socketOutput = null;
     private BufferedReader socketInput = null;
@@ -20,6 +20,9 @@ public class Client {
             socketInput = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
 
         }
+        /**
+         * Basic exception handling
+         */
         catch (UnknownHostException e) {
             System.err.println("Cannot resolve host!\n");
             System.exit(1);
@@ -34,12 +37,13 @@ public class Client {
         String fromServer;
         String fromUser;
         Date date = new Date();
-        // communication loop
 
         // read from server
         try {
             while ((fromServer = socketInput.readLine()) != null) {
                 System.out.println("Server: " + fromServer);
+
+                //Terminate client if server returns "bye"
                 if (fromServer.equals("bye")){
                     break;
                 }
@@ -48,17 +52,20 @@ public class Client {
                 fromUser = stdIn.readLine();
 
     	        if (fromUser != null) {
-                      // echo client string
+                    // echo user input
                     System.out.println("Client: " + fromUser);
                     // write to server
                     socketOutput.println(fromUser);
                 }
             }
+            
+            //Close sockets and streams
             socketOutput.close();
             socketInput.close();
             stdIn.close();
             Socket.close();
         }
+        //In case of exception, show what exactly has happened
         catch (IOException e) {
             e.printStackTrace();
         }
