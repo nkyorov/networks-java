@@ -42,7 +42,7 @@ public class Client {
         try {
             while ((fromServer = socketInput.readLine()) != null) {
                 System.out.println("Server: " + fromServer);
-
+                sendfi
                 //Terminate client if server returns "bye"
                 if (fromServer.equals("bye")){
                     break;
@@ -64,6 +64,8 @@ public class Client {
             socketInput.close();
             stdIn.close();
             Socket.close();
+
+
         }
         //In case of exception, show what exactly has happened
         catch (IOException e) {
@@ -90,25 +92,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-
-    //     public void saveFile(String filename) throws IOException {
-    //     DataInputStream dataIn = new DataInputStream(client.getInputStream());
-    //     FileOutputStream fileOut = new FileOutputStream("clientFiles/" + filename);
-    //     byte[] buffer = new byte[8*1024];
-
-    //     File f1 = new File("serverFiles/" + filename);
-    //     long fileSize = f1.length();
-
-    //     int total = 0 , bytesRead ;
-    //     while (total < fileSize && (bytesRead = dataIn.read(buffer)) != -1 ){
-    //         total += bytesRead;
-    //         fileOut.write(buffer);
-    //     }
-
-    //     dataIn.close();
-    //     fileOut.close();
-    // }
-
+    
     public static void main(String[] args) {
       Client client = new Client();
       client.run();

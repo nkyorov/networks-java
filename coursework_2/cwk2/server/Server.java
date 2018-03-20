@@ -28,24 +28,23 @@ public class Server {
         }
     }
 
-    // public void sendFile(String file) {
-    //     try {
-    //         int count, total = 0;
-    //         byte[] bytes = new byte[8 * 1024];
+    public void saveFile(String fname) throws IOException {
+        DataInputStream dataIn = new DataInputStream(client.getInputStream());
+        FileOutputStream fileOut = new FileOutputStream("../client/clientFiles/" + fname);
+        byte[] buffer = new byte[8*1024];
 
-    //         DataOutputStream dataOut = new DataOutputStream(ServerSocket.getOutputStream());
-    //         FileInputStream fileIn = new FileInputStream("../server/serverFiles/" + file);
+        File f1 = new File("serverFiles/" + fname);
+        long fileSize = f1.length();
 
-    //         while ((count = fileIn.read(bytes)) > 0) {
-    //             total += count;
-    //             dataOut.write(bytes, 0, count);
-    //         }
-    //         fileIn.close();
-    //         dataOut.close();
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+        int total = 0, bytesRead;
+        while (total < fileSize &&( bytesRead = dataIn.read(buffer))!= -1 ){
+            total += bytesRead ;
+            fileOut.write(buff);
+        }
+        
+        fileOut.close();
+        dataIn.close();
+    }
 
     public static void main(String[] args) throws IOException {
         Server server = new Server();
