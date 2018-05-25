@@ -1,0 +1,2 @@
+Simple Java program converting multiple hostnames into instances of InetAddress.
+Provide hostnames either as command line arguments or as system input.
